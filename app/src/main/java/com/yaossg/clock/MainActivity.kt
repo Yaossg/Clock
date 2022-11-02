@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var updateButton: Button
     lateinit var recycler: RecyclerView
     lateinit var recordButton: Button
+    lateinit var clearButton: Button
 
     val recordListViewModel by lazy { RecordListViewModelFactory(this).create(RecordListViewModel::class.java) }
 
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         updateButton = findViewById(R.id.updateButton)
         recycler = findViewById(R.id.recycler)
         recordButton = findViewById(R.id.recordButton)
+        clearButton = findViewById(R.id.clearButton)
 
         updateButton.setOnClickListener {
             clockTextView.text = SimpleDateFormat("hh:mm:ss", Locale.US).format(Date())
@@ -59,6 +61,11 @@ class MainActivity : AppCompatActivity() {
 
         recordButton.setOnClickListener {
             dataSource.add(Record(clockTextView.text.toString()))
+        }
+
+        clearButton.setOnClickListener {
+            db.set(listOf())
+            dataSource.liveData.postValue(db.get())
         }
     }
 }

@@ -22,7 +22,7 @@ object RecordDiffCallback : DiffUtil.ItemCallback<Record>() {
 
 }
 
-class RecordAdapter : ListAdapter<Record, RecordAdapter.RecordViewHolder>(RecordDiffCallback) {
+open class RecordAdapter : ListAdapter<Record, RecordAdapter.RecordViewHolder>(RecordDiffCallback) {
     class RecordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val recordTextView: TextView = itemView.findViewById(R.id.recyclerText)
         private var currentRecord: Record? = null
@@ -43,5 +43,15 @@ class RecordAdapter : ListAdapter<Record, RecordAdapter.RecordViewHolder>(Record
     override fun onBindViewHolder(holder: RecordViewHolder, position: Int) {
         val record = getItem(position)
         holder.bind(record)
+    }
+}
+
+object RemoteRecordAdapter: RecordAdapter() {
+    override fun getItem(position: Int): Record {
+        return Record(RemoteClock.now.get()?.timelist?.get(position) ?: "Waiting for server")
+    }
+
+    override fun getItemCount(): Int {
+        return RemoteClock.now.get()?.timelist?.size ?: 0
     }
 }
